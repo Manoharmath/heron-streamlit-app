@@ -195,10 +195,8 @@ def home():
     cA, cB = st.columns(2)
     with cA:
         big_button("▶️ Example 1", key="ex1", page="ex1")
-        big_button("▶️ Example 2", key="ex2", page="ex2")
     with cB:
-        big_button("▶️ Example 3", key="ex3", page="ex3")
-        big_button("▶️ Example 4", key="ex4", page="ex4")
+        big_button("▶️ Example 2", key="ex2", page="ex2")
 
     st.info("When you’re ready, we’ll add CVXPY + ECOS to these example pages.")
 
@@ -223,8 +221,6 @@ def placeholder_example(title: str):
 
 def ex1(): placeholder_example("Example 1")
 def ex2(): placeholder_example("Example 2")
-def ex3(): placeholder_example("Example 3")
-def ex4(): placeholder_example("Example 4")
 
 # ----------------- ROUTER -----------------
 page = st.session_state["page"]
@@ -234,9 +230,5 @@ elif page == "ex1":
     ex1()
 elif page == "ex2":
     ex2()
-elif page == "ex3":
-    ex3()
-elif page == "ex4":
-    ex4()
 else:
     home()
