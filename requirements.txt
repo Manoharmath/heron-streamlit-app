@@ -1,5 +1,15 @@
+# core UI
 streamlit==1.37.1
-cvxpy==1.5.3
-ecos==2.0.13
-numpy==1.26.4
 plotly==5.23.0
+
+# numeric stack (install first so wheels are ready)
+numpy==1.26.4
+scipy==1.13.1
+
+# solvers (ecos is our target; osqp/qdldl are extras CVXPY often wants)
+osqp==0.6.7.post3
+qdldl==0.1.7.post4
+ecos==2.0.13
+
+# cvxpy (pins to a wheel that works well on cloud)
+cvxpy==1.5.3
