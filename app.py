@@ -1,70 +1,113 @@
-
-import time
-from typing import Dict, Any, List, Tuple
-
-import numpy as np
+# app.py
 import streamlit as st
+import numpy as np
+import plotly.express as px
 
-from heron_core import solve_heron, SetSpec, Point, Segment, Polygon, Disk
-from examples import get_example, EXAMPLE_NAMES
-from viz import make_figure
+# --------- BASIC SETUP ---------
+st.set_page_config(page_title="My Heron App", page_icon="🧭", layout="wide")
 
-st.set_page_config(page_title="Generalized Heron Problem — CVXPY + Streamlit", layout="wide")
+# A tiny helper to remember which screen we are on
+if "page" not in st.session_state:
+    st.session_state["page"] = "bio"
 
-st.title("Generalized Heron Problem — CVXPY + ECOS")
-st.caption("Interactive simulations of four examples.")
+def go(page_name: str):
+    st.session_state["page"] = page_name
 
-with st.sidebar:
-    ex_name = st.selectbox("Choose example", EXAMPLE_NAMES, index=0)
-    n_frames = st.slider("Frames for animation sweep", 5, 200, 60, 5)
-    autoplay = st.checkbox("Autoplay sweep", value=False)
-    sleep_ms = st.slider("Frame delay (ms)", 0, 200, 30, 10)
-    show_connectors = st.checkbox("Show connector lines", value=True)
-    show_sets = st.checkbox("Show sets", value=True)
-    show_legend = st.checkbox("Show legend", value=False)
+# --------- BIO VIEW ---------
+def bio_view():
+    # <<< EDIT these for your own bio >>>
+    YOUR_NAME = "Your Name"
+    YOUR_TITLE = "Researcher / Student"
+    YOUR_EMAIL = "you@example.com"
+    YOUR_SHORT_BIO = (
+        "I’m researching the Generalized Heron Problem. "
+        "This app hosts interactive examples built with Streamlit. "
+        "I’ll add CVXPY (ECOS) simulations soon."
+    )
+    YOUR_PHOTO_URL = ""  # optional: paste a direct image URL
+
+    left, right = st.columns([1, 2])
+    with left:
+        if YOUR_PHOTO_URL:
+            st.image(YOUR_PHOTO_URL, use_container_width=True)
+        else:
+            st.markdown("*(Add a photo by setting `YOUR_PHOTO_URL` in app.py)*")
+    with right:
+        st.title(YOUR_NAME)
+        st.subheader(YOUR_TITLE)
+        st.write(YOUR_SHORT_BIO)
+        st.markdown(f"**Contact:** {YOUR_EMAIL}")
+
     st.markdown("---")
-    st.write("**Weights** (per set)")
+    st.subheader("Examples")
+    st.caption("Click a button to open an example. (Placeholders for now—paste your Colab code later.)")
 
-example_factory = get_example(ex_name)
+    c1, c2 = st.columns(2)
+    with c1:
+        st.button("▶️ Example 1", use_container_width=True, on_click=go, args=("ex1",))
+        st.button("▶️ Example 2", use_container_width=True, on_click=go, args=("ex2",))
+    with c2:
+        st.button("▶️ Example 3", use_container_width=True, on_click=go, args=("ex3",))
+        st.button("▶️ Example 4", use_container_width=True, on_click=go, args=("ex4",))
 
-# param slider for the sweep (0..1)
-alpha = st.slider("Parameter α (sweep this to animate)", 0.0, 1.0, 0.25, 0.01)
+    st.info(
+        "Tip: Keep this simple until deployment works. "
+        "When ready, we’ll add CVXPY/ECOS and your real simulations."
+    )
 
-# Build sets & weights for this alpha
-sets, weights, canvas = example_factory(alpha)
+# --------- PLACEHOLDER EXAMPLE VIEWS ---------
+def back_to_bio():
+    st.button("⬅️ Back to Bio", on_click=go, args=("bio",))
 
-# Optional: edit weights in the sidebar
-with st.sidebar:
-    for i, w in enumerate(weights):
-        weights[i] = st.number_input(f"w[{i+1}]", value=float(w), step=0.1, key=f"w_{i}")
+def ex1_view():
+    st.header("Example 1")
+    back_to_bio()
+    st.write("This is a placeholder. Replace with your Colab code later.")
+    # Tiny interactive demo so you can see something working
+    n = st.slider("How many points?", 50, 500, 200, 50)
+    xs = np.random.RandomState(1).randn(n)
+    ys = xs**2 + np.random.RandomState(2).randn(n) * 0.3
+    fig = px.scatter(x=xs, y=ys, title="Placeholder plot")
+    st.plotly_chart(fig, use_container_width=True)
 
-# Solve once for current alpha
-sol = solve_heron(sets, weights)
+def ex2_view():
+    st.header("Example 2")
+    back_to_bio()
+    st.write("Placeholder. Paste your second example here.")
+    t = np.linspace(0, 2*np.pi, 200)
+    fig = px.line(x=t, y=np.sin(t), title="Sine wave (placeholder)")
+    st.plotly_chart(fig, use_container_width=True)
 
-# Render current frame
-fig = make_figure(sets, weights, sol, canvas, show_connectors=show_connectors, show_sets=show_sets, show_legend=show_legend)
-st.plotly_chart(fig, use_container_width=True)
+def ex3_view():
+    st.header("Example 3")
+    back_to_bio()
+    st.write("Placeholder. Paste your third example here.")
+    t = np.linspace(0, 2*np.pi, 200)
+    fig = px.line(x=t, y=np.cos(2*t), title="Cosine (placeholder)")
+    st.plotly_chart(fig, use_container_width=True)
 
-# Autoplay sweep across alpha
-if autoplay:
-    ph = st.empty()
-    for t in np.linspace(0, 1, n_frames):
-        sets_t, weights_t, canvas_t = example_factory(float(t))
-        sol_t = solve_heron(sets_t, weights_t)
-        fig_t = make_figure(sets_t, weights_t, sol_t, canvas_t, show_connectors=show_connectors, show_sets=show_sets, show_legend=show_legend)
-        ph.plotly_chart(fig_t, use_container_width=True)
-        time.sleep(sleep_ms/1000.0)
+def ex4_view():
+    st.header("Example 4")
+    back_to_bio()
+    st.write("Placeholder. Paste your fourth example here.")
+    # Simple scatter
+    rng = np.random.default_rng(0)
+    x = rng.normal(0, 1, 150)
+    y = rng.normal(0, 1, 150)
+    fig = px.scatter(x=x, y=y, title="Random scatter (placeholder)")
+    st.plotly_chart(fig, use_container_width=True)
 
-# Show numeric solution
-st.subheader("Solution Data")
-col1, col2 = st.columns(2)
-with col1:
-    st.write("**x\*** (minimizer):", np.array(sol['x']).round(4).tolist())
-    st.write("**Objective value** (∑ wᵢ‖x − yᵢ‖):", round(float(sol['obj']), 6))
-with col2:
-    st.write("**Closest points yᵢ on each set Cᵢ**:")
-    y_table = {f"y[{i+1}]": np.array(y).round(4).tolist() for i, y in enumerate(sol['y_list'])}
-    st.json(y_table)
-
-st.markdown("---")
-st.caption("Built with CVXPY (ECOS), NumPy, and Plotly in Streamlit.")
+# --------- ROUTER ---------
+page = st.session_state["page"]
+if page == "bio":
+    bio_view()
+elif page == "ex1":
+    ex1_view()
+elif page == "ex2":
+    ex2_view()
+elif page == "ex3":
+    ex3_view()
+elif page == "ex4":
+    ex4_view()
+else:
+    bio_view()
