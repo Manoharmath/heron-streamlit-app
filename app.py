@@ -1,5 +1,6 @@
-# app.py
-# Attractive Streamlit landing page with Bio + geometry animation + 4 example buttons.
+# This script creates an attractive, professional Streamlit landing page
+# with a bio, an interactive geometry animation, and placeholder buttons
+# for future project examples.
 
 import time
 import numpy as np
@@ -22,22 +23,25 @@ AFFILIATION = "Dr. Harisingh Gour Vishwavidyalaya, Sagar"
 EMAIL = "manoharfbg@gmail.com"
 PHONE = "+91 9304561611"
 
+# Updated Short Bio based on the CV
 SHORT_BIO = (
-    "I’m a research scholar working on **geometric optimization** — with a focus on the "
-    "**Heron, Fagnano, and Fermat–Torricelli problems** — and on algorithmic approaches in "
-    "convex analysis. I design and prototype models in **Python/Matlab**, explore computational "
-    "methods, and build interactive visualizations to make geometry come alive."
+    "I'm a research scholar specializing in **geometric optimization** and **convex analysis**. "
+    "My work focuses on classical problems like **Heron, Fagnano, and Fermat–Torricelli**, "
+    "where I develop computational approaches using Python and MATLAB to create interactive "
+    "models and visualizations that bring complex geometric concepts to life."
 )
 
+# Updated Highlights based on the CV
 HIGHLIGHTS = [
     "Fellowship for Training of Young Scientists — **MP Young Scientist Congress 2025**",
     "First Rank (Poster): *Generalized Fagnano’s Problem* — **National Mathematics Day 2024**",
-    "Best Oral Presentation — **ICRTMPCS 2023**",
+    "Best Oral Presentation — **ICRTMPCS 2023**"
 ]
 
+# Updated Interests & Skills
 INTERESTS = [
-    "Geometric & Convex Optimization", "Convex Analysis",
-    "Optimization Algorithms", "Machine Learning",
+    "Geometric Optimization", "Convex Optimization", "Convex Analysis",
+    "Optimization Algorithms", "Machine Learning"
 ]
 
 SKILLS = [
@@ -69,7 +73,7 @@ def geometry_fig(t: float):
     This is purely visual (no solver) — smooth and reliable on Streamlit Cloud.
     """
     # Pentagon vertices (convex, CCW-ish)
-    V = np.array([[0.5, 1.0],[1.8, 0.2],[3.6, 0.8],[4.1, 2.6],[1.2, 3.4]])
+    V = np.array([[0.5, 1.0], [1.8, 0.2], [3.6, 0.8], [4.1, 2.6], [1.2, 3.4]])
     # Moving point on a circle
     r, c = 1.4, np.array([3.5, 3.6])
     x = c + r * np.array([np.cos(2*np.pi*t), np.sin(2*np.pi*t)])
@@ -136,7 +140,7 @@ def home():
             )
     with right:
         st.markdown(f"<h1 style='margin-bottom:0'>{NAME}</h1>", unsafe_allow_html=True)
-        st.markdown(f"**{TITLE}**  ·  {AFFILIATION}")
+        st.markdown(f"**{TITLE}** ·  {AFFILIATION}")
         st.markdown(
             f"<div style='font-size:16px;line-height:1.6;margin-top:8px'>{SHORT_BIO}</div>",
             unsafe_allow_html=True,
@@ -181,6 +185,7 @@ def home():
         for tt in np.linspace(0, 1, 80):
             ph.plotly_chart(geometry_fig(float(tt)), use_container_width=True)
             time.sleep(delay/1000.0)
+            st.experimental_rerun() # Use rerun to update the slider
 
     st.markdown("---")
 
