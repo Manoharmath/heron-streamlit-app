@@ -62,7 +62,7 @@ def big_button(label, key, page):
     st.button(label, key=key, use_container_width=True, type="primary", on_click=go, args=(page,))
 
 # ----------------- GEOMETRY ANIMATION FIGURE -----------------
-def geometry_fig(t: float) -> go.Figure:
+def geometry_fig(t: float):
     """
     Simple geometry: a convex pentagon and a point moving on a circle.
     Draw connector from x* (moving point) to its nearest polygon vertex (for aesthetics).
@@ -174,8 +174,7 @@ def home():
 
     # Draw
     ph = st.empty()
-    fig = geometry_fig(t)
-    ph.plotly_chart(fig, use_container_width=True)
+    ph.plotly_chart(geometry_fig(t), use_container_width=True)
 
     # Autoplay loop
     if autoplay:
